@@ -48,7 +48,7 @@ const pause = async () => {
 const leerInput = async (message) => {
   return await inquirer.prompt({
     type: "input",
-    name: "desc",
+    name: "input",
     message,
     validate(value) {
       if (value.length === 0) {
