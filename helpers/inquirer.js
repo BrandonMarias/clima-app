@@ -59,24 +59,14 @@ const leerInput = async (message) => {
   });
 };
 //////////////////////////////////////////////////////////////////
-const elegirTarea = (tareas, conChecked = false) => {
-  return tareas.map((tarea, i) => {
-    if (conChecked) {
-      return {
-        value: tarea.id,
-        name: `${`${i + 1}.`.green} ${tarea.description}`,
-        checked: tarea.completadoEn ? true : false,
-      };
-    }
-    return {
-      value: tarea.id,
-      name: `${`${i + 1}.`.green} ${tarea.description}`,
-    };
-  });
-};
 
-const selecionarTarea = async (tareas = [], message = "") => {
-  const choices = elegirTarea(tareas);
+
+const selecionarCiudad = async (ciudades = [], message = "Seleccione lugar") => {
+  const choices = ciudades.map((ciudad, idx) => ({
+    value: ciudad.id,
+    name: `${`${idx + 1}`.green} ${ciudad.nombre}`
+  }))
+  
   choices.unshift({
     value: "0",
     name: `${"0.".green} Cancelar`,
@@ -102,26 +92,11 @@ const confirmar = async (message) => {
   });
 };
 
-const listaCompletar = async (tareas = []) => {
-  const choices = elegirTarea(tareas, true);
-
-  const preguntas = [
-    {
-      type: "checkbox",
-      name: "ids",
-      message: "seleciones",
-      choices,
-    },
-  ];
-  const { ids } = await inquirer.prompt(preguntas);
-  return ids;
-};
 
 module.exports = {
   inquirerMenu,
   pause,
   leerInput,
-  selecionarTarea,
   confirmar,
-  listaCompletar,
+  selecionarCiudad
 };
