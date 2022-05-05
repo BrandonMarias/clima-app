@@ -26,12 +26,16 @@ const main = async () => {
         const id = await selecionarCiudad(lugares)
         if (id==='0') continue;
         const lugarSelecionado = lugares.find( l => l.id === id)
-
+        busquedas.agregarEnHistorial(lugarSelecionado.nombre)
         busquedas.mostrarClima(lugarSelecionado)
         break;
 
       case "2":
-        console.log("hola 2");
+        busquedas.historialCap.forEach((lugar,i) => {
+          const idx = `${i + 1}.`.green
+
+          console.log(`${idx} ${lugar.toLocaleUpperCase()}`)
+        })
         break;
     }
 
