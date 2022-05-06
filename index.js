@@ -22,20 +22,26 @@ const main = async () => {
     switch (opcion) {
       case "1":
         const { input } = await leerInput("Busque una Ciudad");
-        const lugares =  await busquedas.buscarCiudad(input);
-        const id = await selecionarCiudad(lugares)
-        if (id==='0') continue;
-        const lugarSelecionado = lugares.find( l => l.id === id)
-        busquedas.agregarEnHistorial(lugarSelecionado.nombre)
-        busquedas.mostrarClima(lugarSelecionado)
+        const lugares = await busquedas.buscarCiudad(input);
+        const id = await selecionarCiudad(lugares);
+        if (id === "0") continue;
+        const lugarSelecionado = lugares.find((l) => l.id === id);
+        busquedas.agregarEnHistorial(lugarSelecionado);
+        busquedas.mostrarClima(lugarSelecionado);
         break;
 
       case "2":
-        busquedas.historialCap.forEach((lugar,i) => {
-          const idx = `${i + 1}.`.green
+        const idLugar = await selecionarCiudad(
+          busquedas.historial,
+          "Selecione una ciudad",
+          true
+        );
 
-          console.log(`${idx} ${lugar.toLocaleUpperCase()}`)
-        })
+        if (idLugar === "0") continue;
+
+        const seleccion = busquedas.historial.find((e) => e.id == idLugar);
+
+        busquedas.mostrarClima(seleccion);
         break;
     }
 

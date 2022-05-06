@@ -9,15 +9,6 @@ class Busquedas {
   constructor() {
     this.leerDB();
   }
-  ///////////////////////////////////////////
-  get historialCap() {
-    return this.historial.map((lugar) => {
-      let palabras = lugar.split(" ");
-      palabras = palabras.map((p) => p[0].toUpperCase() + p.substring(1));
-
-      return palabras.join(" ");
-    });
-  }
 
   get parametrosMapBox() {
     return {
@@ -41,6 +32,7 @@ class Busquedas {
         nombre: lugar.place_name,
         lat: lugar.center[1],
         lon: lugar.center[0],
+        fecha: new Date().toLocaleDateString(),
       }));
     } catch (error) {
       return [];
@@ -83,34 +75,31 @@ class Busquedas {
     console.log("Sensación térmica: ", main.feels_like);
   }
 
-  agregarEnHistorial(lugar = "") {
-    if (this.historial.includes(lugar.toLocaleLowerCase())) {
-      return;
+  agregarEnHistorial(lugar) {
+    let repetido = false;
+    this.historial.forEach((el) => {
+      if (el.nombre === lugar.nombre) repetido = true;
+    });
+
+    if (!repetido) {
+      this.historial.unshift(lugar);
+
+      if (this.historial.length > 5) this.historial.pop();
+
+      this.guardarBD();
     }
-
-    this.historial.unshift(lugar.toLocaleLowerCase());
-
-    if (this.historial.length > 5) this.historial.pop();
-
-    this.guardarBD();
   }
 
   guardarBD() {
-    const payload = {
-      historial: this.historial,
-    };
-
-    fs.writeFileSync(this.dbPath, JSON.stringify(payload));
+    fs.writeFileSync(this.dbPath, JSON.stringify(this.historial));
   }
 
   leerDB() {
-    if (!fs.existsSync(this.dbPath)) {
-      return null;
+    if (fs.existsSync(this.dbPath)) {
+      const info = fs.readFileSync(this.dbPath, { encoding: "utf-8" });
+
+      this.historial = [...JSON.parse(info)];
     }
-
-    const info = fs.readFileSync(this.dbPath, { encoding: "utf-8" });
-
-    this.historial = [...JSON.parse(info).historial];
   }
 }
 

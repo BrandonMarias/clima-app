@@ -61,10 +61,10 @@ const leerInput = async (message) => {
 //////////////////////////////////////////////////////////////////
 
 
-const selecionarCiudad = async (ciudades = [], message = "Seleccione lugar") => {
+const selecionarCiudad = async (ciudades = [], message = "Seleccione lugar", mostarFecha = false) => {
   const choices = ciudades.map((ciudad, idx) => ({
     value: ciudad.id,
-    name: `${`${idx + 1}`.green} ${ciudad.nombre}`
+    name: `${`${idx + 1}`.green} ${ciudad.nombre}${(mostarFecha)?` :: ${ciudad.fecha.green}`:''}`
   }))
   
   choices.unshift({
